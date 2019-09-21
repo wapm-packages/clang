@@ -1,0 +1,34 @@
+[package]
+name="clang"
+version="0.0.1"
+description="CLANG"
+readme = "README.md"
+disable-command-rename=true
+repository = "https://github.com/wapm-packages/pyodide"
+
+[[module]]
+name="clang"
+source="clang.wasm"
+abi = "wasi"
+
+[module.interfaces]
+wasi = "0.0.0-unstable"
+
+[[module]]
+name="wasm-ld"
+source="wasm-ld.wasm"
+abi = "wasi"
+
+[module.interfaces]
+wasi = "0.0.0-unstable"
+
+[[command]]
+name="clang"
+module="clang"
+
+[[command]]
+name="wasm-ld"
+module="wasm-ld"
+
+[fs]
+"/sys"="sysroot"

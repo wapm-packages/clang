@@ -1,0 +1,5 @@
+wapm_packages
+.vscode
+example.o
+example.wasm
+/wapm.lock
