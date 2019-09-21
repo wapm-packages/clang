@@ -8,7 +8,17 @@ The WebAssembly binaries are copied from Ben's fork of [llvm-project](https://gi
 
 # Compile the C file to a WASM WASI file
 
-First, you will need to create an example.c file. You can take the source [from here]().
+First, clone this repo:
+
+```bash
+git clone https://github.com/wapm-packages/clang.git
+cd clang
+```
+
+Then you will need to create a source file `example.c`, so we can compile it to WebAssembly.
+
+> Note: You can take the source [from here](https://github.com/wapm-packages/clang/blob/master/example.c).
+
 
 ```
 # Compile example.c to an object file (example.o)
@@ -19,7 +29,7 @@ wapm run clang --dir=. -- -cc1 -triple wasm32-unkown-wasi -isysroot /sys -intern
 wapm run wasm-ld --dir=. -- -L/sys/lib/wasm32-wasi /sys/lib/wasm32-wasi/crt1.o ./example.o -lc -o ./example.wasm
 ```
 
-# Run it with Wasmer! 
+And last, but not least... run it with Wasmer! 
 
 ```
 wasmer run example.wasm
