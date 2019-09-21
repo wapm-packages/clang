@@ -20,9 +20,8 @@ Then you will need to create a source file `example.c`, so we can compile it to 
 > Note: You can take the source [from here](https://github.com/wapm-packages/clang/blob/master/example.c).
 
 
-```
+```bash
 # Compile example.c to an object file (example.o)
-
 wapm run clang --dir=. -- -cc1 -triple wasm32-unkown-wasi -isysroot /sys -internal-isystem /sys/include -emit-obj -o ./example.o ./example.c
 
 # Compile example.o to example.wasm
@@ -31,6 +30,6 @@ wapm run wasm-ld --dir=. -- -L/sys/lib/wasm32-wasi /sys/lib/wasm32-wasi/crt1.o .
 
 And last, but not least... run it with Wasmer! 
 
-```
+```bash
 wasmer run example.wasm
 ```
