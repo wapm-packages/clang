@@ -1,35 +1,35 @@
-# Clang in WASM
+# Clang
 
-This repo demonstrates how to run clang & it's linker using only WebAssembly and [Wasmer](https://wasmer.io/).
+This package ships the full `clang` compiler and it's Wasm linker (`wasm-ld`), so we can compile C programs to WASI using just WebAssembly.
 
-This repo is showcasing the great work from Ben Smith [exposed in his CppCon 2019 WebAssembly talk](https://www.youtube.com/watch?time_continue=4&v=5N4b-rU-OAA).
+> Note: This repo is extending the great work from [Ben Smith](https://twitter.com/binjimint) [published in his CppCon 2019 WebAssembly talk](https://www.youtube.com/watch?time_continue=4&v=5N4b-rU-OAA). The WebAssembly binaries are copied from Ben's fork of [llvm-project](https://github.com/binji/llvm-project/releases).
 
-The WebAssembly binaries are copied from Ben's fork of [llvm-project](https://github.com/binji/llvm-project/releases).
+## Run clang!
 
-# Compile the C file to a WASM WASI file
-
-First, clone this repo:
-
-```bash
-git clone https://github.com/wapm-packages/clang.git
-cd clang
-```
-
-Then you will need to create a source file `example.c`, so we can compile it to WebAssembly.
-
-> Note: You can take the source [from here](https://github.com/wapm-packages/clang/blob/master/example.c).
-
+In this example, we will pass our C program to `clang` via stdin.
+Then, we will run the Wasm linker to generate the final `.wasm` program.
 
 ```bash
-# Compile example.c to an object file (example.o)
-wapm run clang --dir=. -- -cc1 -triple wasm32-unkown-wasi -isysroot /sys -internal-isystem /sys/include -emit-obj -o ./example.o ./example.c
+# Run the compiler
+echo 'int printf(const char *, ...); int main(){printf("hello world!\n");}' | wapm run clang -cc1 -triple wasm32-unkown-wasi -isysroot /sys -internal-isystem /sys/include -emit-obj -o ./example.o -
 
-# Compile example.o to example.wasm
-wapm run wasm-ld --dir=. -- -L/sys/lib/wasm32-wasi /sys/lib/wasm32-wasi/crt1.o ./example.o -lc -o ./example.wasm
+# Run the Wasm linker
+wapm run wasm-ld -L/sys/lib/wasm32-wasi /sys/lib/wasm32-wasi/crt1.o ./example.o -lc -o ./example.wasm
 ```
 
-And last, but not least... run it with Wasmer! 
+And last, but not least... run it with a [WebAssembly runtime](https://github.com/wasmerio/wasmer)! 
 
 ```bash
-wasmer run example.wasm
+wasmer example.wasm
 ```
+
+## Limitations
+
+When you run clang normally (eg. `clang example.c -o ./example`), it will spawn two different process under the hood:
+
+1. The compiler: `clang -cc1 -triple wasm32-unkown-wasi -isysroot /sys -internal-isystem /sys/include -emit-obj -o ./example.o ./example.c`
+2. The linker: `wasm-ld -L/sys/lib/wasm32-wasi /sys/lib/wasm32-wasi/crt1.o ./example.o -lc -o ./example.wasm`
+
+However the `posix_spawn` required syscall is not available in WASI.
+
+Because of that, **we need to run this two different calls ourselves**.

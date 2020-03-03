@@ -1,10 +1,9 @@
 [package]
 name="clang"
-version="0.0.1"
-description="CLANG"
+version="0.1.0"
+description="Clang is a compiler front end for the C, C++, Objective-C and Objective-C++ programming languages"
 readme = "README.md"
-disable-command-rename=true
-repository = "https://github.com/wapm-packages/pyodide"
+repository = "https://github.com/wapm-packages/clang"
 
 [[module]]
 name="clang"
