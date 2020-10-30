@@ -11,7 +11,7 @@ Then, we will run the Wasm linker to generate the final `.wasm` program.
 
 ```bash
 # Run the compiler
-echo 'int printf(const char *, ...); int main(){printf("hello world!\n");}' | wapm run clang -cc1 -triple wasm32-unkown-wasi -isysroot /sys -internal-isystem /sys/include -emit-obj -o ./example.o -
+echo 'int printf(const char *, ...); int main(){printf("hello world!\n");}' | wapm run clang -cc1 -triple wasm32-unknown-wasi -isysroot /sys -internal-isystem /sys/include -emit-obj -o ./example.o -
 
 # Run the Wasm linker
 wapm run wasm-ld -L/sys/lib/wasm32-wasi /sys/lib/wasm32-wasi/crt1.o ./example.o -lc -o ./example.wasm
@@ -27,7 +27,7 @@ wasmer example.wasm
 
 When you run clang normally (eg. `clang example.c -o ./example`), it will spawn two different process under the hood:
 
-1. The compiler: `clang -cc1 -triple wasm32-unkown-wasi -isysroot /sys -internal-isystem /sys/include -emit-obj -o ./example.o ./example.c`
+1. The compiler: `clang -cc1 -triple wasm32-unknown-wasi -isysroot /sys -internal-isystem /sys/include -emit-obj -o ./example.o ./example.c`
 2. The linker: `wasm-ld -L/sys/lib/wasm32-wasi /sys/lib/wasm32-wasi/crt1.o ./example.o -lc -o ./example.wasm`
 
 However the `posix_spawn` required syscall is not available in WASI.
