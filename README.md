@@ -11,10 +11,10 @@ Then, we will run the Wasm linker to generate the final `.wasm` program.
 
 ```bash
 # Run the compiler
-echo 'int printf(const char *, ...); int main(){printf("hello world!\n");}' | wapm run clang -cc1 -triple wasm32-unknown-wasi -isysroot /sys -internal-isystem /sys/include -emit-obj -o ./example.o -
+echo 'int printf(const char *, ...); int main(){printf("hello world!\n");}' | wapm run --dir=. clang -cc1 -triple wasm32-unknown-wasi -isysroot /sys -internal-isystem /sys/include -emit-obj -o ./example.o -
 
 # Run the Wasm linker
-wapm run wasm-ld -L/sys/lib/wasm32-wasi /sys/lib/wasm32-wasi/crt1.o ./example.o -lc -o ./example.wasm
+wapm run --dir=. wasm-ld -L/sys/lib/wasm32-wasi /sys/lib/wasm32-wasi/crt1.o ./example.o -lc -o ./example.wasm
 ```
 
 And last, but not least... run it with a [WebAssembly runtime](https://github.com/wasmerio/wasmer)! 
